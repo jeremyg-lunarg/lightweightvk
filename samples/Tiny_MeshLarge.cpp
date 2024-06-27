@@ -71,11 +71,11 @@ constexpr bool kEnableCompression = false;
 constexpr bool kEnableCompression = true;
 #endif
 constexpr bool kPreferIntegratedGPU = false;
-#if defined(NDEBUG)
+//#if defined(NDEBUG)
 constexpr bool kEnableValidationLayers = false;
-#else
-constexpr bool kEnableValidationLayers = true;
-#endif // NDEBUG
+//#else
+//constexpr bool kEnableValidationLayers = true;
+//#endif // NDEBUG
 
 std::string folderThirdParty;
 std::string folderContentRoot;
@@ -1376,6 +1376,11 @@ void render(double delta, uint32_t frameIndex) {
           .perObject = ctx_->gpuAddress(ubPerObject_[frameIndex]),
           .materials = ctx_->gpuAddress(sbMaterials_),
       };
+      static uint32_t frame_count = 0;
+      frame_count++;
+      if (frame_count == 300) {
+        bindings.perObject = 0xdeadbeef;
+      }
       buffer.cmdPushConstants(bindings);
       buffer.cmdBindIndexBuffer(ib0_, lvk::IndexFormat_UI32);
       buffer.cmdDrawIndexed(static_cast<uint32_t>(indexData_.size()));
